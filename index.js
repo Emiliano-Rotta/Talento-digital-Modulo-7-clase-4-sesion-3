@@ -120,3 +120,81 @@ const pool = new Pool({
 // Respuesta esperada:
 // Inserción con NULL: "Error: La columna 'cursos_id' no permite valores NULL."
 // Inserción con cursos_id inexistente: "Error: Violación de clave foránea en 'estudiantes.categoria_id'."
+
+
+//-----------------------------------------------
+// //errores mas comunes
+// SQLSTATE[HY000]: General Error  Error genérico, puede deberse a problemas como consultas mal formadas, incompatibilidades entre la base de datos y la biblioteca, o fallas de conexión.
+// SQLSTATE[28000]: Invalid authorization specification  Usuario o contraseña incorrectos al intentar conectarse a la base de datos.
+// SQLSTATE[08001]: Unable to connect to database  No se pudo establecer la conexión con el servidor de base de datos.
+// SQLSTATE[42000]: Syntax error or access violation  Consulta SQL con un error de sintaxis o intentando acceder a una tabla/columna que no existe.
+// SQLSTATE[23000]: Integrity constraint violation   Violación de restricciones, como claves primarias duplicadas o referencias foráneas no válidas.
+
+
+
+//-----------------------------------------------
+// Manejo de Cursores en Node.js con pg-cursor
+const Cursor = require('pg-cursor');
+
+const usarCursor = async () => {
+
+    const client = await pool.connect(); // Solicita una conexión al grupo de conexiones (pool) y devuelve un cliente conectado a la base de datos.
+
+
+    try {
+      const cursor = client.query(new Cursor('SELECT * FROM estudiantes')); //new Cursor Crea un cursor para recorrer los resultados de la consulta de manera incremental.
+
+      
+      cursor.read(5, (err, rows) => {  //cursor.read(5, ...): Lee las próximas 5 filas del conjunto de resultados asociados al cursor.
+
+        if (err) {
+          console.error('Error al leer filas:', err.message);
+        } else {
+          console.log('Filas leídas:', rows);
+        }
+        cursor.close(() => {//Cierra el cursor, indicando que ya no se usará para leer datos.
+
+          client.release(); // Libera el cliente de la conexión al pool, para que pueda ser reutilizado por otro proceso.
+
+        });
+
+      });
+
+    } catch (error) {
+      console.error('Error al usar el cursor:', error.message);
+      client.release();
+    }
+  };
+  
+  usarCursor();
+  
+
+  //otra opcion para armar grupos de a cinco 
+  
+    //const batchSize = 5;
+    //   let hasMoreRows = true;
+
+    //   while (hasMoreRows) {
+    //     await new Promise((resolve, reject) => {
+    //       cursor.read(batchSize, (err, rows) => {
+    //         if (err) {
+    //           reject(err);
+    //           return;
+    //         }
+            
+    //         if (rows.length === 0) {
+      
+    //           // No quedan más filas
+    //           hasMoreRows = false;
+    //         } else {
+    //           console.log('Filas leídas:', rows); // Muestra las filas leídas
+    //         }
+    //         resolve(); // Continúa al siguiente lote
+    //       });
+    //     });
+    //   }
+
+
+
+    //------------------------------------------------------
+    //Ejercicio: tomar una tabla de una base de datos y : Procesar grandes volúmenes con cursores..

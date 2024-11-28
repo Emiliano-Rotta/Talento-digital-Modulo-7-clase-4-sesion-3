@@ -134,40 +134,45 @@ const pool = new Pool({
 
 //-----------------------------------------------
 // Manejo de Cursores en Node.js con pg-cursor
-const Cursor = require('pg-cursor');
+// const Cursor = require('pg-cursor');
 
-const usarCursor = async () => {
+// const usarCursor = async () => {
 
-    const client = await pool.connect(); // Solicita una conexión al grupo de conexiones (pool) y devuelve un cliente conectado a la base de datos.
+//     const client = await pool.connect(); // Solicita una conexión al grupo de conexiones (pool) y devuelve un cliente conectado a la base de datos.
 
 
-    try {
-      const cursor = client.query(new Cursor('SELECT * FROM estudiantes')); //new Cursor Crea un cursor para recorrer los resultados de la consulta de manera incremental.
+//     try {
+//       const cursor = client.query(new Cursor('SELECT * FROM estudiantes')); //new Cursor Crea un cursor para recorrer los resultados de la consulta de manera incremental.
 
       
-      cursor.read(5, (err, rows) => {  //cursor.read(5, ...): Lee las próximas 5 filas del conjunto de resultados asociados al cursor.
+//       cursor.read(5, (err, rows) => {  //cursor.read(5, ...): Lee las próximas 5 filas del conjunto de resultados asociados al cursor.
 
-        if (err) {
-          console.error('Error al leer filas:', err.message);
-        } else {
-          console.log('Filas leídas:', rows);
-        }
-        cursor.close(() => {//Cierra el cursor, indicando que ya no se usará para leer datos.
+//         if (err) {
+//           console.error('Error al leer filas:', err.message);
+//         } else {
+//           console.log('Filas leídas:', rows);
+//         }
+//         cursor.close(() => {//Cierra el cursor, indicando que ya no se usará para leer datos.
 
-          client.release(); // Libera el cliente de la conexión al pool, para que pueda ser reutilizado por otro proceso.
+//           client.release(); // Libera el cliente de la conexión al pool, para que pueda ser reutilizado por otro proceso.
 
-        });
+//         });
 
-      });
+//       });
 
-    } catch (error) {
-      console.error('Error al usar el cursor:', error.message);
-      client.release();
-    }
-  };
+//     } catch (error) {
+//       console.error('Error al usar el cursor:', error.message);
+//       client.release();
+//     }
+//   };
   
-  usarCursor();
+//   usarCursor();
   
+
+
+
+
+
 
   //otra opcion para armar grupos de a cinco 
   
